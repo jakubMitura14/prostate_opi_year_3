@@ -58,3 +58,5 @@ RUN apt-get update \
 # append /opt/tools to runtime path for NGC CLI to be accessible from all file system locations
 ENV PATH=${PATH}:/opt/tools
 WORKDIR /opt/monai
+  # git config --global user.email "jakub.mitura14@gmail.com"
+  # git config --global user.name "Jakub Mitura"
