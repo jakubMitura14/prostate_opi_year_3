@@ -26,7 +26,14 @@
 			
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"ms-python.python"
+				"ms-python.python",
+				"ms-toolsai.jupyter",
+				"ms-azuretools.vscode-docker",
+				"github.copilot"
+				// "ms-python.vscode-pylance"
+			],
+			"mounts": [
+				// "source=/media/jm/hddData/datasets/slicer_data,target=/root/data,type=bind,consistency=cached"
 			]
 		}
 	},
