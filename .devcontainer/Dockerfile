@@ -60,3 +60,4 @@ ENV PATH=${PATH}:/opt/tools
 WORKDIR /opt/monai
   # git config --global user.email "jakub.mitura14@gmail.com"
   # git config --global user.name "Jakub Mitura"
+  # git config pull.rebase true
