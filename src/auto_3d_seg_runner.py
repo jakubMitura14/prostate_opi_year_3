@@ -28,6 +28,8 @@ main_dir="/workspaces/prostate_opi_year_3/data/dataset/post_norm_min_max_bias_on
 train_folds_path="/workspaces/prostate_opi_year_3/data/AI4AR_uczacy_foldy.csv"
 test_ids_path="/workspaces/prostate_opi_year_3/data/AI4ARtestowy.csv"
 
+work_dir = "/workspaces/prostate_opi_year_3/data/work_dir_b"
+
 folds_df=pd.read_csv(train_folds_path)
 test_ids_df=pd.read_csv(test_ids_path,header=None)
 
@@ -98,10 +100,11 @@ for _, row in folds_df.iterrows():
 
 # Populate the testing data
 for test_id in test_ids:
-    image_path = os.path.join(main_dir, str(test_id), f"{str(test_id)}_adc.nii.gz")
-    label_path = os.path.join(main_dir,ppath_folder, f"{str(patient_id)}_lesion_union_adc.nii.gz")
+    ppath_folder=modify_string(str(test_id))
+    image_path = os.path.join(main_dir,ppath_folder, f"{str(test_id)}_adc.nii.gz")
+    label_path = os.path.join(main_dir,ppath_folder, f"{str(test_id)}_lesion_union_adc.nii.gz")
     if not os.path.exists(label_path):
-        label_path = os.path.join(main_dir,ppath_folder, f"{str(patient_id)}_empty.nii.gz")
+        label_path = os.path.join(main_dir,ppath_folder, f"{str(test_id)}_empty.nii.gz")
         
     data_dict["testing"].append({
         "image": image_path,
@@ -116,7 +119,6 @@ with open(datalist_path, 'w') as yaml_file:
 
 
 # Define the work directory
-work_dir = "/workspaces/prostate_opi_year_3/data/work_dir_b"
 os.makedirs(work_dir, exist_ok=True)
 
 runner = AutoRunner(
@@ -124,8 +126,7 @@ runner = AutoRunner(
     input={
         "modality": "MRI",
         "datalist": datalist_path,
-        "dataroot": work_dir,
-    },
+        "dataroot": work_dir    },
 )
 # Prepare the configuration dictionary
 # config_dict = {
@@ -147,23 +148,20 @@ runner = AutoRunner(
 
 # print(runner.data_src_cfg_name)
 
-# ensemble_runner = EnsembleRunner(
-#     data_src_cfg_name=runner.data_src_cfg_name,
-#     work_dir=runner.work_dir,
-#     num_fold=runner.num_fold,
-#     ensemble_method_name=runner.ensemble_method_name,
-#     mgpu=int(runner.device_setting["n_devices"]) > 1,
-#     **runner.kwargs,  # for set_image_save_transform
-#     **runner.pred_params,
-# )  # for inference
-# ensemble_runner.run(runner.device_setting)
+ensemble_runner = EnsembleRunner(
+    data_src_cfg_name=runner.data_src_cfg_name,
+    work_dir=runner.work_dir,
+    num_fold=runner.num_fold,
+    ensemble_method_name=runner.ensemble_method_name,
+    mgpu=int(runner.device_setting["n_devices"]) > 1,
+    **runner.kwargs,  # for set_image_save_transform
+    **runner.pred_params,
+)  # for inference
+ensemble_runner.run(runner.device_setting)
+#results are in /workspaces/prostate_opi_year_3/data/work_dir_b/dataset/post_norm_min_max_bias_on
 
 
 
-
-# example_to_predict="/workspaces/prostate_opi_year_3/data/dataset/post_norm_min_max_bias_on/1218/1218_lesion_union_adc.nii.gz"
-# output_path="/workspaces/prostate_opi_year_3/data/results/1218_lesion_inferred.nii.gz"
-
-
-runner.run()
+# forretrain unhash
+# runner.run()
 

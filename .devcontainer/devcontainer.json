@@ -58,3 +58,8 @@
         // "ghcr.io/devcontainers/features/python:1": {}
     }
 }
+
+gsutil cp -r /home/jakubmitura/prostate_opi_year_3/aa/data /home/jakubmitura/prostate_opi_year_3/aa gs://data_from_a
+
+
+sudo cp -R /home/jakubmitura/prostate_opi_year_3/data /home/jakubmitura/prostate_opi_year_3/aa
